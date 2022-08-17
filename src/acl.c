@@ -2282,6 +2282,7 @@ void authCommand(client *c) {
  * requirepass config, so passing in NULL will set the user to be nopass. */
 void ACLUpdateDefaultUserPassword(sds password) {
     ACLSetUser(DefaultUser,"resetpass",-1);
+#ifndef REDIS_EMBEDDED
     if (password) {
         sds aclop = sdscatlen(sdsnew(">"), password, sdslen(password));
         ACLSetUser(DefaultUser,aclop,sdslen(aclop));
@@ -2289,4 +2290,7 @@ void ACLUpdateDefaultUserPassword(sds password) {
     } else {
         ACLSetUser(DefaultUser,"nopass",-1);
     }
+#else
+    ACLSetUser(DefaultUser,"nopass",-1);
+#endif
 }

@@ -449,7 +449,7 @@ valgrind:
 
 ## 2 ###################################################################
 embedded:
-	$(MAKE) MALLOC="libc" CFLAGS="-fPIC -fpic -shared" $(EMBEDDED_REDIS_NAME)
+	$(MAKE) MALLOC="libc" CFLAGS="-fPIC -fpic -shared -DREDIS_EMBEDDED" $(EMBEDDED_REDIS_NAME)
 	#$(MAKE) MALLOC="jemalloc" CFLAGS="-fPIC -fpic -shared" $(EMBEDDED_REDIS_NAME)
 ########################################################################
 

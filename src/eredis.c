@@ -34,8 +34,7 @@ eredis_client_t *eredis_create_client(void)
 {
     eredis_client_t *c = zmalloc(sizeof(eredis_client_t));
     c->client = createClient(NULL);
-    c->client->flags = CLIENT_MODULE;      /* So we get replies even with fd == -1 */
-    //c->client->flags |= CLIENT_MODULE;      /* So we get replies even with fd == -1 */
+    c->client->flags |= CLIENT_MODULE;      /* So we get replies even with fd == -1 */
     return c;
 }
 

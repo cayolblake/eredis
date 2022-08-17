@@ -103,8 +103,10 @@ static void clientSetDefaultAuth(client *c) {
     /* If the default user does not require authentication, the user is
      * directly authenticated. */
     c->user = DefaultUser;
+#ifndef REDIS_EMBEDDED
     c->authenticated = (c->user->flags & USER_FLAG_NOPASS) &&
                        !(c->user->flags & USER_FLAG_DISABLED);
+#endif
 }
 
 int authRequired(client *c) {
@@ -113,6 +115,9 @@ int authRequired(client *c) {
     int auth_required = (!(DefaultUser->flags & USER_FLAG_NOPASS) ||
                           (DefaultUser->flags & USER_FLAG_DISABLED)) &&
                         !c->authenticated;
+#ifdef REDIS_EMBEDDED
+    return 0;
+#endif
     return auth_required;
 }
 
@@ -156,9 +161,7 @@ client *createClient(connection *conn) {
     c->sentlen = 0;
     c->flags = 0;
     c->ctime = c->lastinteraction = server.unixtime;
-    //
-    //!clientSetDefaultAuth(c);
-    //
+    clientSetDefaultAuth(c);
     c->replstate = REPL_STATE_NONE;
     c->repl_put_online_on_ack = 0;
     c->reploff = 0;

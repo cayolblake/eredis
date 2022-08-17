@@ -3206,10 +3206,10 @@ void initServer(void) {
 #endif
 
     createSharedObjects();
-#ifndef REDIS_EMBEDDED
     adjustOpenFilesLimit();
     const char *clk_msg = monotonicInit();
     serverLog(LL_NOTICE, "monotonic clock: %s", clk_msg);
+#ifndef REDIS_EMBEDDED
     server.el = aeCreateEventLoop(server.maxclients+CONFIG_FDSET_INCR);
     if (server.el == NULL) {
         serverLog(LL_WARNING,
@@ -4071,6 +4071,7 @@ int processCommand(client *c) {
         }
     }
 
+#ifndef REDIS_EMBEDDED
     /* Check if the user can run this command according to the current
      * ACLs. */
     int acl_errpos;
@@ -4099,6 +4100,7 @@ int processCommand(client *c) {
         }
         return C_OK;
     }
+#endif
 
     /* If cluster is enabled perform the cluster redirection here.
      * However we don't perform the redirection if:
